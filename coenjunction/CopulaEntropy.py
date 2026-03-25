@@ -4,8 +4,8 @@ from scipy.special import logsumexp
 from scipy.stats import qmc
 from numba import njit
 
-from Polynomials_Splines import _shifted_legendre, _FullOrthoFeatures, _PairwiseOrthoFeatures, _make_feature_map
-from utils import _augment_boundary_features, _modified_ecdf_to_uniform, _log_q_diag_jitter_truncnorm
+from .Polynomials_Splines import _make_feature_map
+from .utils import _augment_boundary_features, _modified_ecdf_to_uniform, _log_q_diag_jitter_truncnorm
 
 
 class CopulaEntropyEstimator:
