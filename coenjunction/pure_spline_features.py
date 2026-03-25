@@ -19,9 +19,9 @@ Two interaction options
 
 Usage
 -----
-1) Put this file next to OrthogonalPolynomials.py (or merge into it).
-2) In OrthogonalPolynomials.py, import and wire _make_feature_map to return
-   _SplineOnlyFeatures when feature_mode is 'spline' (or similar).
+1) Keep this file in the package next to Polynomials_Splines.py.
+2) In your feature-map builder, route spline feature_mode values to
+   `make_feature_map_spline_only`.
 
 Example:
     feat = _SplineOnlyFeatures(k=20, n_basis=8, degree=3, pairwise='restricted')
@@ -228,7 +228,7 @@ class _SplineOnlyFeatures:
 
 
 # -----------------------------------------------------------------------------
-# Drop-in wiring snippet for OrthogonalPolynomials.py
+# Drop-in wiring snippet for feature-map builders
 # -----------------------------------------------------------------------------
 
 def make_feature_map_spline_only(feature_mode: str, k: int, *, n_basis: int = 8, degree: int = 3):

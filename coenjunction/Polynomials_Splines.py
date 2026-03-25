@@ -1,4 +1,4 @@
-from pure_spline_features import make_feature_map_spline_only
+from .pure_spline_features import make_feature_map_spline_only
 
 import numpy as np
 from scipy.interpolate import BSpline

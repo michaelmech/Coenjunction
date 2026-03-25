@@ -1,5 +1,5 @@
 import numpy as np
-from CopulaEntropy import CopulaEntropyEstimator  # adjust import if needed
+from .CopulaEntropy import CopulaEntropyEstimator
 
 def estimate_mi_from_ce(
     X,
