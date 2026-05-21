@@ -1,6 +1,17 @@
 import numpy as np
 
+from .CopulaEntropy import CopulaEntropyEstimator
 from .MutualInformation import estimate_mi_from_ce
+
+
+def _make_shared_mi_estimator(mi_kwargs):
+    return CopulaEntropyEstimator(
+        degree=mi_kwargs.get("degree", 2),
+        max_num_mc=mi_kwargs.get("max_num_mc", 10_000),
+        max_num_mc_adapt=mi_kwargs.get("max_num_mc_adapt", 5_000),
+        alpha_reg=mi_kwargs.get("alpha_reg", 0),
+        random_state=mi_kwargs.get("random_state", None),
+    )
 
 
 def calculate_transfer_entropy(X, Y, max_lag=10, return_lag=False, mi_kwargs=None):
@@ -21,6 +32,8 @@ def calculate_transfer_entropy(X, Y, max_lag=10, return_lag=False, mi_kwargs=Non
         raise ValueError("max_lag must be smaller than the number of samples.")
 
     mi_kwargs = {} if mi_kwargs is None else dict(mi_kwargs)
+    if "estimator" not in mi_kwargs:
+        mi_kwargs["estimator"] = _make_shared_mi_estimator(mi_kwargs)
 
     ami_values = []
     for lag in range(1, max_lag + 1):
@@ -41,7 +54,7 @@ def calculate_transfer_entropy(X, Y, max_lag=10, return_lag=False, mi_kwargs=Non
     y_past = Y[:-optimal_lag].reshape(-1, 1)
 
     mi_full = estimate_mi_from_ce(x_curr, np.hstack([x_past, y_past]), **mi_kwargs)
-    mi_self = estimate_mi_from_ce(x_curr, x_past, **mi_kwargs)
+    mi_self = ami_values[optimal_lag - 1]
     te = max(float(mi_full - mi_self), 0.0)
 
     if return_lag:
@@ -64,6 +77,8 @@ def calculate_transfer_entropy_with_edge_lag(X, Y, max_lag=10, return_lag=False,
         raise ValueError("max_lag must be smaller than the number of samples.")
 
     mi_kwargs = {} if mi_kwargs is None else dict(mi_kwargs)
+    if "estimator" not in mi_kwargs:
+        mi_kwargs["estimator"] = _make_shared_mi_estimator(mi_kwargs)
 
     best_te = -np.inf
     best_lag = 1

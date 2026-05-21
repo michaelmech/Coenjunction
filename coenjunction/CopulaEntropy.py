@@ -344,9 +344,9 @@ class CopulaEntropyEstimator:
             return obj, grad
 
         res = minimize(
-            lambda t: fun_and_grad(t)[0],
+            fun_and_grad,
             theta0,
-            jac=lambda t: fun_and_grad(t)[1],
+            jac=True,
             method="L-BFGS-B",
             options={
                 "disp": False,
